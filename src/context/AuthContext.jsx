@@ -2,8 +2,6 @@ import React, { createContext, useState, useContext, useEffect, useMemo } from '
 import authService from '../services/authService';
 import toast from 'react-hot-toast';
 
-// Add console logs to debug
-console.log('AuthContext.jsx loaded');
 
 const AuthContext = createContext(null);
 

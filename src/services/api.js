@@ -2,10 +2,11 @@ import axios from 'axios';
 
 // Create axios instance with default config
 const api = axios.create({
-  baseURL: 'https://vin2grow-latest-2.onrender.com/api',
+  baseURL: 'https://vin2grow.in/api',
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true
 });
 
 // Add request interceptor to add auth token

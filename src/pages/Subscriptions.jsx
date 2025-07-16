@@ -5,7 +5,7 @@ import { FaPause, FaPlay, FaTimes, FaEdit, FaHistory } from 'react-icons/fa';
 import axios from 'axios';
 import { products, user } from '../services/api';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
+const API_URL = import.meta.env.VITE_API_URL || 'https://vin2grow.in/api';
 
 const statusColors = {
   active: 'bg-green-100 text-green-700',

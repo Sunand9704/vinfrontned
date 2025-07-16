@@ -1,11 +1,9 @@
 import axios from 'axios';
 
-// Add console logs to debug
-console.log('apiService.js loaded');
 
 // Create a more resilient axios instance
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'https://vin2grow-latest-2.onrender.com/api',
+  baseURL: import.meta.env.VITE_API_URL || 'https://vin2grow.in/api',
   headers: {
     'Content-Type': 'application/json'
   },

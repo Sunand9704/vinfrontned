@@ -8,9 +8,6 @@ import { toast } from 'react-hot-toast';
 import { Loader } from '../components/Loader';
 import { FaMapMarkerAlt, FaEdit, FaTrash, FaStar, FaPlus, FaCheck } from 'react-icons/fa';
 
-// Add console logs to debug
-console.log('Address component loaded');
-
 const Address = () => {
   const navigate = useNavigate();
   const location = useLocation();

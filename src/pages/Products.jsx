@@ -6,7 +6,7 @@ import { toast } from 'react-hot-toast';
 import { products as productsApi } from '../services/api';
 import { mockProducts } from '../data/mockProducts';
 
-const BACKEND_URL = 'https://vin2grow-latest-2.onrender.com/';
+const BACKEND_URL = 'https://vin2grow.in/';
 
 // Helper function to get image URL
 const getImageUrl = (img) => {
