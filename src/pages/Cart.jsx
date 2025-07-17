@@ -8,10 +8,6 @@ import { toast } from 'react-hot-toast';
 import { Loader } from '../components/Loader';
 import { BACKEND_URL } from '../config';
 
-const getImageUrl = (img) => {
-  if (!img) return '/placeholder.svg';
-  return img.startsWith('http') ? img : BACKEND_URL + img.replace(/^\/+/, '');
-};
 
 const Cart = () => {
   const navigate = useNavigate();
@@ -230,7 +226,7 @@ const Cart = () => {
                     >
                       <div className="flex-shrink-0 w-24 h-24 md:w-32 md:h-32 lg:w-40 lg:h-40 rounded-lg overflow-hidden bg-gray-700 border border-green-700">
                         <img
-                          src={getImageUrl(item?.product?.images?.[0])}
+                          src={item.product.images[0].url}
                           alt={item?.product?.name}
                           className="w-full h-full object-contain"
                         />

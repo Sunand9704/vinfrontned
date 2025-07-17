@@ -19,10 +19,6 @@ const statusStyles = {
   cancelled: 'bg-red-900 text-red-100',
 };
 
-const getImageUrl = (img) => {
-  if (!img) return '/placeholder.svg';
-  return img.startsWith('http') ? img : BACKEND_URL + img.replace(/^\/+/, '');
-};
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
@@ -356,7 +352,7 @@ const Orders = () => {
                         >
                           <div className="flex-shrink-0 w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 rounded-lg overflow-hidden bg-gray-700 border border-green-700">
                             <img
-                              src={getImageUrl(item.product?.images?.[0])}
+                              src={item.product?.images[0].url}
                               alt={item.product?.name}
                               className="w-full h-full object-contain"
                             />

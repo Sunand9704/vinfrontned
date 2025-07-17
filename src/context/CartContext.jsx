@@ -29,7 +29,6 @@ export const CartProvider = ({ children }) => {
         setLoading(true);
         setError(null);
         const response = await apiService.get('/cart');
-        console.log('Cart API response:', response.data);
         
         if (response.data?.items) {
           console.log('Cart items:', response.data.items);

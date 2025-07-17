@@ -6,7 +6,7 @@ import { toast } from 'react-hot-toast';
 import { products as productsApi } from '../services/api';
 import { mockProducts } from '../data/mockProducts';
 
-const BACKEND_URL = 'https://vin2grow.in/';
+const BACKEND_URL = 'https://vin2grow.in/api';
 
 // Helper function to get image URL
 const getImageUrl = (img) => {
@@ -237,6 +237,7 @@ const Products = () => {
       try {
         setLoading(true);
         const response = await productsApi.getAll();
+        console.log(response.data)
         // Add the Furley House product
         const productsWithFurley = [
           ...response.data,
@@ -455,22 +456,23 @@ const Products = () => {
                         >
                           {/* Product Image */}
                           <div className="relative">
-                            {product.images && product.images.length > 0 ? (
-                              <div 
-                                className="cursor-pointer"
-                                onClick={() => setSelectedProduct(product)}
-                              >
-                                <img
-                                  src={getImageUrl(product.images[0])}
-                                  alt={product.name}
-                                  className="object-contain max-h-40 mx-auto hover:opacity-90 transition-opacity"
-                                />
+                           {product.images && product.images.length > 0 ? (
+                              <div className="flex gap-2 overflow-x-auto">
+                                {product.images.map((img, index) => (
+                                  <img
+                                    key={img._id || index}
+                                    src={img.url}
+                                    alt={`product-${index}`}
+                                    className="object-contain max-h-40 mx-auto hover:opacity-90 transition-opacity"
+                                  />
+                                ))}
                               </div>
                             ) : (
                               <div className="w-full h-40 bg-gray-700 flex items-center justify-center">
                                 <span className="text-green-400 text-sm">No image available</span>
                               </div>
                             )}
+                            
                             {product.discount > 0 && (
                               <div className="absolute top-1 right-1 bg-green-700 text-white px-2 py-1 rounded text-xs font-medium">
                                 {product.discount}% OFF
