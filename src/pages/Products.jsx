@@ -8,18 +8,9 @@ import { mockProducts } from '../data/mockProducts';
 
 const BACKEND_URL = 'https://vin2grow.in/api';
 
-// Helper function to get image URL
-const getImageUrl = (img) => {
-  if (!img) return '/placeholder.svg';
-  if (img.startsWith('http')) return img;
-  const cleanImgPath = img.startsWith('/') ? img : `/${img}`;
-  return BACKEND_URL + cleanImgPath.replace(/^\/+/, '');
-};
-
 // Image Modal Component
 const ImageModal = ({ isOpen, onClose, product, quantities, handleQuantityChange, handleAddToCart }) => {
   const [selectedImage, setSelectedImage] = useState(0);
-  
   React.useEffect(() => {
     setSelectedImage(0);
   }, [isOpen, product]);
@@ -47,11 +38,7 @@ const ImageModal = ({ isOpen, onClose, product, quantities, handleQuantityChange
             <div className="md:w-1/2 p-4">
               {/* Main Image */}
               <div className="relative w-full h-64 bg-gray-700 rounded-lg mb-4 flex items-center justify-center">
-                <img
-                  src={product?.images?.[selectedImage] ? getImageUrl(product.images[selectedImage]) : '/placeholder.svg'}
-                  alt={product?.name}
-                  className="w-full h-full object-contain"
-                />
+               
                 {product?.discount > 0 && (
                   <div className="absolute top-2 right-2 bg-green-600 text-white px-2 py-1 rounded-full text-xs font-medium">
                     {product.discount}% OFF
@@ -67,11 +54,7 @@ const ImageModal = ({ isOpen, onClose, product, quantities, handleQuantityChange
                     onClick={() => setSelectedImage(index)}
                     className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border ${selectedImage === index ? 'border-green-500 ring-2 ring-green-400' : 'border-gray-600'}`}
                   >
-                    <img
-                      src={getImageUrl(image)}
-                      alt={`${product?.name} ${index + 1}`}
-                      className="w-full h-full object-cover"
-                    />
+                  
                   </button>
                 ))}
               </div>
