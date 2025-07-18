@@ -304,7 +304,7 @@ const Orders = () => {
                 </li>
               ))}
             </ul>
-            <p className="font-semibold text-lg">Total Amount: ₹{location.state.orderSummary.totalAmount}</p>
+            <p className="font-semibold text-lg">Total Amount: ₹{location.state.orderSummary.total}</p>
           </motion.div>
         )}
 

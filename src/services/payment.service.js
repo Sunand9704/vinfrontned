@@ -2,7 +2,7 @@ import api from './api';
 
 const createOrder = async (amount) => {
   try {
-    const response = await api.post('/payment/create-order', { amount });
+    const response = await api.post('/payment/create-order', { amount , receipt: 'receipt_' + new Date().getTime()});
     return response.data;
   } catch (error) {
     throw error;
@@ -49,7 +49,7 @@ const initializeRazorpayPayment = (orderData, onSuccess) => {
       contact: ''
     },
     theme: {
-      color: '#16a34a' // Updated to match frontend's primary-600 green color
+      color: '#16a34a' 
     }
   };
 

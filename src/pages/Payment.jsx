@@ -15,7 +15,6 @@ const Payment = () => {
   const [deliveryOTP, setDeliveryOTP] = useState(null);
   const [orderDetails, setOrderDetails] = useState(null);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('online'); // Default to Pay Online
-
   useEffect(() => {
     const total = cart.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
     setOrderDetails({
@@ -84,7 +83,7 @@ const Payment = () => {
   
         // Step 3: Open Razorpay payment modal
         const options = {
-          key: import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_LhDSZSAlf3hFaQ',
+          key: import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_Hi1GYpZ5GO1ona',
           amount: razorpayOrder.data.amount,
           currency: razorpayOrder.data.currency,
           name: 'Vin2Grow',
@@ -93,6 +92,7 @@ const Payment = () => {
           handler: async function (response) {
             try {
               const verifyResponse = await apiService.post('/payment/verify-payment', {
+                userID:user.id,
                 razorpay_order_id: response.razorpay_order_id,
                 razorpay_payment_id: response.razorpay_payment_id,
                 razorpay_signature: response.razorpay_signature,
@@ -105,8 +105,7 @@ const Payment = () => {
               });
   
               if (verifyResponse.data.success) {
-                toast.success('Payment successful!');
-                
+                toast.success('Payment successful!');     
                 // Order is already created in the backend during payment verification
                 setDeliveryOTP(verifyResponse.data.order.otp);
                 await clearCart();
