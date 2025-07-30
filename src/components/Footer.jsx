@@ -17,7 +17,7 @@ const Footer = () => {
             </Link>
             <h3 className="text-2xl md:text-4xl font-bold text-green-400">Vin2Grow</h3>
             <p className="text-gray-300 text-center max-w-xs text-xs md:text-base">
-              Handcrafted wooden treasures, made with love and delivered with care.
+              Eco Friendly Products, made with love and delivered with care.
             </p>
           </div>
 
@@ -74,7 +74,7 @@ const Footer = () => {
                   href="tel:+ +91 7207711919"
                   className="text-gray-300 hover:text-green-400 transition-colors text-xs md:text-base"
                 >
-                  +91  +91 7207711919
+                  +91 7207711919
                 </a>
               </li>
               <li className="flex items-center justify-center space-x-2 md:space-x-3">

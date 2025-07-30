@@ -337,35 +337,7 @@ const Cart = () => {
                   )}
                 </div>
                 
-                {/* Delivery Date & Time */}
-                <div className="space-y-4 mb-6">
-                  <div>
-                    <label className="block text-base font-semibold text-green-400 mb-2">Delivery Date</label>
-                    <select
-                      value={selectedDeliveryDate}
-                      onChange={(e) => setSelectedDeliveryDate(e.target.value)}
-                      className="w-full bg-gray-700 border-gray-700 text-gray-200 rounded-md focus:ring-green-500 focus:border-green-500 py-3 px-4 text-base"
-                    >
-                      <option value="" className="text-gray-400">Select a date</option>
-                      {getDeliveryDates().map((date) => (
-                        <option key={date.value} value={date.value} className="text-gray-200">{date.label}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-base font-semibold text-green-400 mb-2">Delivery Time</label>
-                    <select
-                      value={selectedTimeSlot}
-                      onChange={(e) => setSelectedTimeSlot(e.target.value)}
-                      className="w-full bg-gray-700 border-gray-700 text-gray-200 rounded-md focus:ring-green-500 focus:border-green-500 py-3 px-4 text-base"
-                    >
-                      <option value="" className="text-gray-400">Select a time slot</option>
-                      {timeSlots.map((slot) => (
-                        <option key={slot.value} value={slot.value} className="text-gray-200">{slot.label}</option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
+            
                 
                 {/* Order Total */}
                 <div className="border-t border-green-700 pt-4">

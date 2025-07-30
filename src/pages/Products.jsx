@@ -1,15 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { useCart } from '../context/CartContext';
-import { toast } from 'react-hot-toast';
-import { products as productsApi } from '../services/api';
-import { mockProducts } from '../data/mockProducts';
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { useCart } from "../context/CartContext";
+import { toast } from "react-hot-toast";
+import { products as productsApi } from "../services/api";
+import { mockProducts } from "../data/mockProducts";
 
-const BACKEND_URL = 'https://vin2grow.in/api';
+const BACKEND_URL = "https://vin2grow.in/api";
 
 // Image Modal Component
-const ImageModal = ({ isOpen, onClose, product, quantities, handleQuantityChange, handleAddToCart }) => {
+const ImageModal = ({
+  isOpen,
+  onClose,
+  product,
+  quantities,
+  handleQuantityChange,
+  handleAddToCart,
+}) => {
   const [selectedImage, setSelectedImage] = useState(0);
   React.useEffect(() => {
     setSelectedImage(0);
@@ -18,27 +25,39 @@ const ImageModal = ({ isOpen, onClose, product, quantities, handleQuantityChange
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75 p-4" onClick={onClose}>
-      <div 
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75 p-4"
+      onClick={onClose}
+    >
+      <div
         className="relative bg-gray-800 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col border border-green-700"
-        onClick={e => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
       >
         <button
           onClick={onClose}
           className="absolute top-2 right-2 text-white hover:text-gray-300 transition-colors z-50 bg-gray-700 rounded-full p-1"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M6 18L18 6M6 6l12 12"
+            />
           </svg>
         </button>
-        
+
         <div className="overflow-y-auto flex-1">
           <div className="md:flex">
             {/* Images Section */}
             <div className="md:w-1/2 p-4">
               {/* Main Image */}
               <div className="relative w-full h-64 bg-gray-700 rounded-lg mb-4 flex items-center justify-center">
-               
                 {product?.discount > 0 && (
                   <div className="absolute top-2 right-2 bg-green-600 text-white px-2 py-1 rounded-full text-xs font-medium">
                     {product.discount}% OFF
@@ -52,65 +71,85 @@ const ImageModal = ({ isOpen, onClose, product, quantities, handleQuantityChange
                   <button
                     key={index}
                     onClick={() => setSelectedImage(index)}
-                    className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border ${selectedImage === index ? 'border-green-500 ring-2 ring-green-400' : 'border-gray-600'}`}
-                  >
-                  
-                  </button>
+                    className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border ${
+                      selectedImage === index
+                        ? "border-green-500 ring-2 ring-green-400"
+                        : "border-gray-600"
+                    }`}
+                  ></button>
                 ))}
               </div>
             </div>
 
             {/* Product Details Section */}
             <div className="md:w-1/2 p-4 border-t md:border-t-0 md:border-l border-gray-700">
-              <h2 className="text-xl font-bold text-white mb-2">{product?.name}</h2>
-              
+              <h2 className="text-xl font-bold text-white mb-2">
+                {product?.name}
+              </h2>
+
               {product?.discount > 0 && (
                 <span className="inline-block bg-green-600 text-white text-xs font-semibold px-2 py-1 rounded-full mb-2">
                   Limited time deal
                 </span>
               )}
 
-              <p className="text-sm text-gray-300 mb-3">{product?.description}</p>
-              
+              <p className="text-sm text-gray-300 mb-3">
+                {product?.description}
+              </p>
+
               {/* Product Tags */}
               {product?.tags && product.tags.length > 0 && (
                 <div className="mb-3">
-                  <h4 className="text-sm font-medium text-gray-400 mb-1">Tags:</h4>
+                  <h4 className="text-sm font-medium text-gray-400 mb-1">
+                    Tags:
+                  </h4>
                   <div className="flex flex-wrap gap-1">
                     {product.tags.map((tag, index) => (
-                      <span key={index} className="bg-gray-700 text-gray-300 text-xs px-2 py-1 rounded-full">
+                      <span
+                        key={index}
+                        className="bg-gray-700 text-gray-300 text-xs px-2 py-1 rounded-full"
+                      >
                         {tag}
                       </span>
                     ))}
                   </div>
                 </div>
               )}
-              
+
               {/* Product Dimensions */}
               {product.length && product.width && product.height ? (
                 <div className="mb-1">
                   <p className="text-xs text-gray-400">
-                    <span className="text-gray-300 font-semibold">Dimensions:</span> {product.length} × {product.width} × {product.height} cm
+                    <span className="text-gray-300 font-semibold">
+                      Dimensions:
+                    </span>{" "}
+                    {product.length} × {product.width} × {product.height} cm
                   </p>
                 </div>
               ) : null}
-              
+
               {/* Stock Information */}
               {product.stock !== undefined ? (
                 <div className="mb-1">
                   <p className="text-xs text-gray-400">
-                    <span className="text-gray-300 font-semibold">Stock:</span> {product.stock} available
+                    <span className="text-gray-300 font-semibold">Stock:</span>{" "}
+                    {product.stock} available
                   </p>
                 </div>
               ) : null}
-              
+
               {/* Price Section */}
               <div className="mb-3">
                 <div className="flex items-baseline gap-1">
-                  <span className="text-xl font-bold text-white">₹{product?.price}</span>
+                  <span className="text-xl font-bold text-white">
+                    ₹{product?.price}
+                  </span>
                   {product?.discount > 0 && (
                     <span className="text-sm text-gray-400 line-through">
-                      ₹{Math.round(product?.price * (1 + product?.discount / 100))}
+                      ₹
+                      {Math.round(
+                        product?.price * (1 + product?.discount / 100)
+                      )}
                     </span>
                   )}
                 </div>
@@ -123,7 +162,11 @@ const ImageModal = ({ isOpen, onClose, product, quantities, handleQuantityChange
                     {[...Array(5)].map((_, i) => (
                       <svg
                         key={i}
-                        className={`w-4 h-4 ${i < Math.floor(product.rating) ? 'fill-current' : 'text-gray-600'}`}
+                        className={`w-4 h-4 ${
+                          i < Math.floor(product.rating)
+                            ? "fill-current"
+                            : "text-gray-600"
+                        }`}
                         viewBox="0 0 20 20"
                         fill="currentColor"
                       >
@@ -131,13 +174,17 @@ const ImageModal = ({ isOpen, onClose, product, quantities, handleQuantityChange
                       </svg>
                     ))}
                   </div>
-                  <span className="text-xs text-gray-400">({product.reviews} reviews)</span>
+                  <span className="text-xs text-gray-400">
+                    ({product.reviews} reviews)
+                  </span>
                 </div>
               )}
 
               {/* Quantity Controls */}
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-400 mb-1">Quantity</label>
+                <label className="block text-sm font-medium text-gray-400 mb-1">
+                  Quantity
+                </label>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center border border-gray-600 rounded-md overflow-hidden">
                     <button
@@ -178,12 +225,13 @@ const ImageModal = ({ isOpen, onClose, product, quantities, handleQuantityChange
 
 const Products = () => {
   const { addToCart } = useCart();
+  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const [searchQuery, setSearchQuery] = useState('');
-  const [sortBy, setSortBy] = useState('popular');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState("popular");
   const [priceRange, setPriceRange] = useState([0, 10000]);
   const [selectedTags, setSelectedTags] = useState([]);
   const [quantities, setQuantities] = useState({});
@@ -191,24 +239,33 @@ const Products = () => {
   const [showAddedToCartMessage, setShowAddedToCartMessage] = useState(false);
   const [showMobileFilters, setShowMobileFilters] = useState(false);
 
-  const allTags = [...new Set(products.flatMap(product => product.tags))];
+  const allTags = [...new Set(products.flatMap((product) => product.tags))];
 
   // Static price range values
   const priceSteps = [0, 500, 1000, 2000, 5000, 10000];
 
   const filteredProducts = products
-    .filter(product => product.name.toLowerCase().includes(searchQuery.toLowerCase()))
-    .filter(product => product.price >= priceRange[0] && product.price <= priceRange[1])
-    .filter(product => selectedTags.length === 0 || selectedTags.some(tag => product.tags.includes(tag)))
+    .filter((product) =>
+      product.name.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    .filter(
+      (product) =>
+        product.price >= priceRange[0] && product.price <= priceRange[1]
+    )
+    .filter(
+      (product) =>
+        selectedTags.length === 0 ||
+        selectedTags.some((tag) => product.tags.includes(tag))
+    )
     .sort((a, b) => {
       switch (sortBy) {
-        case 'price-low':
+        case "price-low":
           return a.price - b.price;
-        case 'price-high':
+        case "price-high":
           return b.price - a.price;
-        case 'rating':
+        case "rating":
           return b.rating - a.rating;
-        case 'newest':
+        case "newest":
           return b._id - a._id;
         default:
           return b.reviews - a.reviews;
@@ -220,14 +277,14 @@ const Products = () => {
       try {
         setLoading(true);
         const response = await productsApi.getAll();
-        console.log(response.data)
+        console.log(response.data);
         // Add the Furley House product
         const productsWithFurley = [
           ...response.data,
           {
-            _id: '',
-            name: 'Warli House',
-            description: 'Made with bamboo and crafting bamboo strips',
+            _id: "",
+            name: "Warli House",
+            description: "Made with bamboo and crafting bamboo strips",
             price: 4999,
             discount: 25,
             length: 29,
@@ -236,14 +293,16 @@ const Products = () => {
             stock: 10,
             rating: 4.5,
             reviews: 15,
-            tags: ['bamboo', 'house', 'decor'],
-            images: ['https://res.cloudinary.com/dnbqgzh4t/image/upload/v1749717841/cwuak5ryngud40gtpe1c.jpg']
-          }
+            tags: ["bamboo", "house", "decor"],
+            images: [
+              "https://res.cloudinary.com/dnbqgzh4t/image/upload/v1749717841/cwuak5ryngud40gtpe1c.jpg",
+            ],
+          },
         ];
         setProducts(response.data);
       } catch (error) {
-        console.error('Error fetching products:', error);
-        setError('Failed to load products. Please try again later.');
+        console.error("Error fetching products:", error);
+        setError("Failed to load products. Please try again later.");
         setProducts(mockProducts);
       } finally {
         setLoading(false);
@@ -254,9 +313,9 @@ const Products = () => {
   }, []);
 
   const handleQuantityChange = (productId, value) => {
-    setQuantities(prev => ({
+    setQuantities((prev) => ({
       ...prev,
-      [productId]: Math.max(1, (prev[productId] || 1) + value)
+      [productId]: Math.max(1, (prev[productId] || 1) + value),
     }));
   };
 
@@ -265,16 +324,20 @@ const Products = () => {
       const quantity = quantities[product._id] || 1;
       await addToCart({
         ...product,
-        quantity
+        quantity,
       });
       setShowAddedToCartMessage(true);
       setTimeout(() => {
         setShowAddedToCartMessage(false);
       }, 2000);
     } catch (error) {
-      console.error('Error adding to cart:', error);
-      toast.error('Failed to add item to cart. Please try again.');
+      console.error("Error adding to cart:", error);
+      toast.error("Failed to add item to cart. Please try again.");
     }
+  };
+
+  const handleProductClick = (product) => {
+    navigate(`/products/${product._id}`);
   };
 
   return (
@@ -306,16 +369,31 @@ const Products = () => {
                     stroke="currentColor"
                     viewBox="0 0 24 24"
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    />
                   </svg>
                 </div>
                 {searchQuery && (
                   <button
-                    onClick={() => setSearchQuery('')}
+                    onClick={() => setSearchQuery("")}
                     className="absolute inset-y-0 right-0 pr-3 flex items-center text-green-400 hover:text-green-300"
                   >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M6 18L18 6M6 6l12 12"
+                      />
                     </svg>
                   </button>
                 )}
@@ -329,7 +407,7 @@ const Products = () => {
               onClick={() => setShowMobileFilters(!showMobileFilters)}
               className="bg-green-700 text-white px-4 py-2 rounded-md text-sm font-medium"
             >
-              {showMobileFilters ? 'Hide Filters' : 'Show Filters'}
+              {showMobileFilters ? "Hide Filters" : "Show Filters"}
             </button>
           </div>
 
@@ -339,21 +417,29 @@ const Products = () => {
               <div className="grid grid-cols-2 gap-4">
                 {/* Price Range */}
                 <div>
-                  <h4 className="text-xs font-semibold mb-1 text-gray-300">Price Range</h4>
+                  <h4 className="text-xs font-semibold mb-1 text-gray-300">
+                    Price Range
+                  </h4>
                   <select
                     value={priceRange[1]}
-                    onChange={(e) => setPriceRange([0, parseInt(e.target.value)])}
+                    onChange={(e) =>
+                      setPriceRange([0, parseInt(e.target.value)])
+                    }
                     className="w-full p-2 border border-green-700 rounded-md text-xs bg-gray-700 text-white"
                   >
-                    {priceSteps.map(step => (
-                      <option key={step} value={step}>Up to ₹{step}</option>
+                    {priceSteps.map((step) => (
+                      <option key={step} value={step}>
+                        Up to ₹{step}
+                      </option>
                     ))}
                   </select>
                 </div>
 
                 {/* Sorting */}
                 <div>
-                  <h4 className="text-xs font-semibold mb-1 text-gray-300">Sort By</h4>
+                  <h4 className="text-xs font-semibold mb-1 text-gray-300">
+                    Sort By
+                  </h4>
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
@@ -379,19 +465,27 @@ const Products = () => {
             {/* Desktop Filters Sidebar - Fixed */}
             <div className="hidden md:block w-64 mr-6">
               <div className="sticky top-40 bg-gray-800 p-4 rounded-lg border border-green-700 h-fit">
-                <h3 className="text-lg font-semibold mb-4 text-green-400">Filters</h3>
-                
+                <h3 className="text-lg font-semibold mb-4 text-green-400">
+                  Filters
+                </h3>
+
                 {/* Price Range */}
                 <div className="mb-6">
-                  <h4 className="text-sm font-semibold mb-3 text-gray-300">Price Range</h4>
+                  <h4 className="text-sm font-semibold mb-3 text-gray-300">
+                    Price Range
+                  </h4>
                   <div className="px-2">
                     <select
                       value={priceRange[1]}
-                      onChange={(e) => setPriceRange([0, parseInt(e.target.value)])}
+                      onChange={(e) =>
+                        setPriceRange([0, parseInt(e.target.value)])
+                      }
                       className="w-full p-2 border border-green-700 rounded-md text-sm bg-gray-700 text-white"
                     >
-                      {priceSteps.map(step => (
-                        <option key={step} value={step}>Up to ₹{step}</option>
+                      {priceSteps.map((step) => (
+                        <option key={step} value={step}>
+                          Up to ₹{step}
+                        </option>
                       ))}
                     </select>
                   </div>
@@ -399,7 +493,9 @@ const Products = () => {
 
                 {/* Sorting */}
                 <div className="mb-6">
-                  <h4 className="text-sm font-semibold mb-2 text-gray-300">Sort By</h4>
+                  <h4 className="text-sm font-semibold mb-2 text-gray-300">
+                    Sort By
+                  </h4>
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
@@ -432,14 +528,15 @@ const Products = () => {
                   ) : (
                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                       {filteredProducts.map((product) => (
-                        <motion.div 
-                          key={product._id} 
-                          className="bg-gray-800 rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-200 border border-green-700"
+                        <motion.div
+                          key={product._id}
+                          className="bg-gray-800 rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-200 border border-green-700 cursor-pointer"
                           whileHover={{ y: -5 }}
+                          onClick={() => handleProductClick(product)}
                         >
                           {/* Product Image */}
                           <div className="relative">
-                           {product.images && product.images.length > 0 ? (
+                            {product.images && product.images.length > 0 ? (
                               <div className="flex gap-2 overflow-x-auto">
                                 {product.images.map((img, index) => (
                                   <img
@@ -452,10 +549,12 @@ const Products = () => {
                               </div>
                             ) : (
                               <div className="w-full h-40 bg-gray-700 flex items-center justify-center">
-                                <span className="text-green-400 text-sm">No image available</span>
+                                <span className="text-green-400 text-sm">
+                                  No image available
+                                </span>
                               </div>
                             )}
-                            
+
                             {product.discount > 0 && (
                               <div className="absolute top-1 right-1 bg-green-700 text-white px-2 py-1 rounded text-xs font-medium">
                                 {product.discount}% OFF
@@ -465,18 +564,25 @@ const Products = () => {
 
                           {/* Product Info */}
                           <div className="p-3 bg-gray-800">
-                            <h3 className="text-sm font-semibold text-white line-clamp-1">{product.name}</h3>
-                            <p className="text-xs text-gray-300 mt-1 line-clamp-2">{product.description}</p>
-                        
+                            <h3 className="text-sm font-semibold text-white line-clamp-1">
+                              {product.name}
+                            </h3>
+                            <p className="text-xs text-gray-300 mt-1 line-clamp-2">
+                              {product.description}
+                            </p>
+
                             {/* Product Dimensions */}
-                            {product.length && product.width && product.height ? (
+                            {product.length &&
+                            product.width &&
+                            product.height ? (
                               <div className="mt-1">
                                 <p className="text-xs text-green-400">
-                                  📏 {product.length}×{product.width}×{product.height} cm
+                                  📏 {product.length}×{product.width}×
+                                  {product.height} cm
                                 </p>
                               </div>
                             ) : null}
-                        
+
                             {/* Stock Information */}
                             {product.stock !== undefined ? (
                               <div className="mt-1">
@@ -485,24 +591,35 @@ const Products = () => {
                                 </p>
                               </div>
                             ) : null}
-                        
+
                             {/* Price and Discount */}
                             <div className="mt-2">
                               <div className="flex items-baseline gap-1">
-                                <span className="text-sm font-bold text-white">₹{product.price}</span>
+                                <span className="text-sm font-bold text-white">
+                                  ₹{product.price}
+                                </span>
                                 {product.discount > 0 && (
                                   <span className="text-xs text-gray-400 line-through">
-                                    ₹{Math.round(product.price * (1 + product.discount / 100))}
+                                    ₹
+                                    {Math.round(
+                                      product.price *
+                                        (1 + product.discount / 100)
+                                    )}
                                   </span>
                                 )}
                               </div>
                             </div>
 
-                            {/* Quantity Controls and Add to Cart */}
+                            {/* Quantity Controls and Add to Cart
                             <div className="mt-3 flex items-center justify-between">
-                              <div className="flex items-center border border-green-700 rounded-md overflow-hidden">
+                              <div
+                                className="flex items-center border border-green-700 rounded-md overflow-hidden"
+                                onClick={(e) => e.stopPropagation()}
+                              >
                                 <button
-                                  onClick={() => handleQuantityChange(product._id, -1)}
+                                  onClick={() =>
+                                    handleQuantityChange(product._id, -1)
+                                  }
                                   className="px-2 py-1 bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm"
                                 >
                                   -
@@ -511,19 +628,24 @@ const Products = () => {
                                   {quantities[product._id] || 1}
                                 </span>
                                 <button
-                                  onClick={() => handleQuantityChange(product._id, 1)}
+                                  onClick={() =>
+                                    handleQuantityChange(product._id, 1)
+                                  }
                                   className="px-2 py-1 bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm"
                                 >
                                   +
                                 </button>
                               </div>
                               <button
-                                onClick={() => handleAddToCart(product)}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleAddToCart(product);
+                                }}
                                 className="bg-green-700 text-white px-3 py-1 rounded-md hover:bg-green-600 text-sm font-medium"
                               >
                                 Add
                               </button>
-                            </div>
+                            </div> */}
                           </div>
                         </motion.div>
                       ))}
