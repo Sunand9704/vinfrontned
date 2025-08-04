@@ -47,11 +47,12 @@ const About = () => {
                   to a wider audience. From wooden crafts and toys to jute bags
                   and eco-friendly frames, every product reflects the
                   creativity, hard work, and cultural heritage of our local
-                  artisans. Our aim is simple: Encourage your talent. Support
+                  artisans. 
+                </p>
+                <p>Our aim is simple: Encourage your talent. Support
                   your passion. Help you grow. Together, we bring rural
                   craftsmanship to the global marketplace. VIN2GROW – Crafting
-                  Opportunities, Growing Futures.
-                </p>
+                  Opportunities, Growing Futures.</p>
               </div>
             </motion.div>
 

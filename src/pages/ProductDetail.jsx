@@ -254,7 +254,7 @@ const ProductDetail = () => {
                     <img
                       src={getImageUrl(image)}
                       alt={`${product.name} ${index + 1}`}
-                      className="w-full h-full object-contain"
+                      className="w-full h-full object-fill"
                       onError={(e) => {
                         e.target.src = "/placeholder.svg";
                       }}
@@ -274,7 +274,7 @@ const ProductDetail = () => {
                   <img
                     src={getImageUrl((product.images || [])[selectedImage])}
                     alt={product.name}
-                    className="w-full h-full object-contain"
+                    className="w-full h-full object-fill"
                     onError={(e) => {
                       e.target.src = "/placeholder.svg";
                     }}
@@ -301,7 +301,7 @@ const ProductDetail = () => {
                       <img
                         src={getImageUrl(image)}
                         alt={`${product.name} ${index + 1}`}
-                        className="w-full h-full object-contain"
+                        className="w-full h-full object-fill"
                         onError={(e) => {
                           e.target.src = "/placeholder.svg";
                         }}

@@ -248,6 +248,15 @@ const Home = () => {
       buttonText: "Shop Jute",
       buttonLink: "/products",
     },
+    {
+      id: 6,
+      title: "Exotic Coco Collection",
+      description: "Discover our unique coconut shell crafted products",
+      image:
+        "https://res.cloudinary.com/dk6rrrwum/image/upload/v1753891711/coco-products_hero_image.webp",
+      buttonText: "Explore Coco",
+      buttonLink: "/products",
+    },
   ];
 
   const categories = [
