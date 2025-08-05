@@ -3,7 +3,10 @@ import axios from "axios";
 // Create a more resilient axios instance
 const api = axios.create({
   baseURL:
-    "https://back3-728k.onrender.com/api" || import.meta.env.VITE_API_URL || "https://vin2grow.in/api",
+    "http://localhost:8081/api" ||
+    "https://back3-728k.onrender.com/api" ||
+    import.meta.env.VITE_API_URL ||
+    "https://vin2grow.in/api",
   headers: {
     "Content-Type": "application/json",
   },

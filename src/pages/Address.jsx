@@ -1,35 +1,51 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { useAddress } from '../context/AddressContext';
-import { useCart } from '../context/CartContext';
-import MapAddressSelector from '../components/MapAddressSelector';
-import { toast } from 'react-hot-toast';
-import { Loader } from '../components/Loader';
-import { FaMapMarkerAlt, FaEdit, FaTrash, FaStar, FaPlus, FaCheck } from 'react-icons/fa';
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { motion } from "framer-motion";
+import { useAddress } from "../context/AddressContext";
+import { useCart } from "../context/CartContext";
+import MapAddressSelector from "../components/MapAddressSelector";
+import { toast } from "react-hot-toast";
+import { Loader } from "../components/Loader";
+import {
+  FaMapMarkerAlt,
+  FaEdit,
+  FaTrash,
+  FaStar,
+  FaPlus,
+  FaCheck,
+} from "react-icons/fa";
 
 const Address = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { addresses, selectedAddress, loading, addAddress, updateAddress, deleteAddress, setDefaultAddress, selectAddress } = useAddress();
+  const {
+    addresses,
+    selectedAddress,
+    loading,
+    addAddress,
+    updateAddress,
+    deleteAddress,
+    setDefaultAddress,
+    selectAddress,
+  } = useAddress();
   const { getCartTotal, cart } = useCart();
   const [showForm, setShowForm] = useState(false);
   const [showMap, setShowMap] = useState(false);
   const [editingAddress, setEditingAddress] = useState(null);
   const [formData, setFormData] = useState({
-    street: '',
-    city: '',
-    state: '',
-    pincode: '',
-    landmark: '',
+    street: "",
+    city: "",
+    state: "",
+    pincode: "",
+    landmark: "",
     isDefault: false,
-    type: 'home'
+    type: "home",
   });
 
   useEffect(() => {
-    console.log('Address component mounted');
+    console.log("Address component mounted");
     if (addresses.length > 0 && !selectedAddress) {
-      const defaultAddress = addresses.find(addr => addr.isDefault);
+      const defaultAddress = addresses.find((addr) => addr.isDefault);
       if (defaultAddress) {
         selectAddress(defaultAddress._id);
       } else {
@@ -40,19 +56,19 @@ const Address = () => {
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
   const handleMapSelect = (addressData) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       street: addressData.address,
       city: addressData.city,
       state: addressData.state,
-      pincode: addressData.pincode
+      pincode: addressData.pincode,
     }));
     setShowMap(false);
   };
@@ -62,50 +78,50 @@ const Address = () => {
     try {
       if (editingAddress) {
         await updateAddress(editingAddress._id, formData);
-        toast.success('Address updated successfully');
+        toast.success("Address updated successfully");
       } else {
         await addAddress(formData);
-        toast.success('Address added successfully');
+        toast.success("Address added successfully");
       }
       setShowForm(false);
       setFormData({
-        street: '',
-        city: '',
-        state: '',
-        pincode: '',
-        landmark: '',
+        street: "",
+        city: "",
+        state: "",
+        pincode: "",
+        landmark: "",
         isDefault: false,
-        type: 'home'
+        type: "home",
       });
       setEditingAddress(null);
     } catch (error) {
-      console.error('Error saving address:', error);
-      toast.error('Failed to save address');
+      console.error("Error saving address:", error);
+      toast.error("Failed to save address");
     }
   };
 
   const handleEdit = (address) => {
     setEditingAddress(address);
     setFormData({
-      street: address.street || '',
-      city: address.city || '',
-      state: address.state || '',
-      pincode: address.pincode || '',
-      landmark: address.landmark || '',
+      street: address.street || "",
+      city: address.city || "",
+      state: address.state || "",
+      pincode: address.pincode || "",
+      landmark: address.landmark || "",
       isDefault: address.isDefault || false,
-      type: address.type || 'home'
+      type: address.type || "home",
     });
     setShowForm(true);
   };
 
   const handleDelete = async (addressId) => {
-    if (window.confirm('Are you sure you want to delete this address?')) {
+    if (window.confirm("Are you sure you want to delete this address?")) {
       try {
         await deleteAddress(addressId);
-        toast.success('Address deleted successfully');
+        toast.success("Address deleted successfully");
       } catch (error) {
-        console.error('Error deleting address:', error);
-        toast.error('Failed to delete address');
+        console.error("Error deleting address:", error);
+        toast.error("Failed to delete address");
       }
     }
   };
@@ -113,16 +129,16 @@ const Address = () => {
   const handleSetDefault = async (addressId) => {
     try {
       await setDefaultAddress(addressId);
-      toast.success('Default address updated');
+      toast.success("Default address updated");
     } catch (error) {
-      console.error('Error setting default address:', error);
-      toast.error('Failed to set default address');
+      console.error("Error setting default address:", error);
+      toast.error("Failed to set default address");
     }
   };
 
   const handlePayNow = () => {
     if (!selectedAddress) {
-      toast.error('Please select an address first');
+      toast.error("Please select an address first");
       return;
     }
 
@@ -133,41 +149,47 @@ const Address = () => {
       // Handle subscription
       const data = {
         ...subscriptionData,
-        deliveryAddress: selectedAddress
+        deliveryAddress: selectedAddress,
       };
-      navigate('/payment', { state: { subscriptionData: data } });
+      navigate("/payment", { state: { subscriptionData: data } });
     } else {
       // Handle regular order
       const orderData = {
         address: selectedAddress,
         totalAmount: getCartTotal(),
-        items: cart.map(item => ({
+        items: cart.map((item) => ({
           id: item.id,
           name: item.name,
           price: item.price,
           quantity: item.quantity,
-          image: item.image
+          image: item.image,
+          category: item.category,
         })),
         subtotal: getCartTotal(),
-        total: getCartTotal()
+        total: getCartTotal(),
       };
-      navigate('/payment', { state: { orderData } });
+      navigate("/payment", { state: { orderData } });
     }
   };
 
   if (loading) {
-    console.log('Address component is loading');
+    console.log("Address component is loading");
     return <Loader />;
   }
 
-  console.log('Address component rendering with data:', { addresses, selectedAddress });
+  console.log("Address component rendering with data:", {
+    addresses,
+    selectedAddress,
+  });
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Delivery Addresses</h1>
+            <h1 className="text-3xl font-bold text-gray-900">
+              Delivery Addresses
+            </h1>
             <p className="mt-2 text-sm text-gray-600">
               Manage your delivery addresses for quick checkout
             </p>
@@ -186,13 +208,13 @@ const Address = () => {
               onClick={() => {
                 setEditingAddress(null);
                 setFormData({
-                  street: '',
-                  city: '',
-                  state: '',
-                  pincode: '',
-                  landmark: '',
+                  street: "",
+                  city: "",
+                  state: "",
+                  pincode: "",
+                  landmark: "",
                   isDefault: false,
-                  type: 'home'
+                  type: "home",
                 });
                 setShowForm(true);
               }}
@@ -219,22 +241,34 @@ const Address = () => {
           >
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-semibold text-gray-900">
-                {editingAddress ? 'Edit Address' : 'Add New Address'}
+                {editingAddress ? "Edit Address" : "Add New Address"}
               </h2>
               <button
                 onClick={() => setShowForm(false)}
                 className="text-gray-400 hover:text-gray-500"
               >
                 <span className="sr-only">Close</span>
-                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <svg
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
               </button>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700">Street Address</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Street Address
+                </label>
                 <div className="mt-1 flex space-x-2">
                   <input
                     type="text"
@@ -258,7 +292,9 @@ const Address = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">City</label>
+                  <label className="block text-sm font-medium text-gray-700">
+                    City
+                  </label>
                   <input
                     type="text"
                     name="city"
@@ -271,7 +307,9 @@ const Address = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">State</label>
+                  <label className="block text-sm font-medium text-gray-700">
+                    State
+                  </label>
                   <input
                     type="text"
                     name="state"
@@ -286,7 +324,9 @@ const Address = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Pincode</label>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Pincode
+                  </label>
                   <input
                     type="text"
                     name="pincode"
@@ -301,7 +341,9 @@ const Address = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Landmark (Optional)</label>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Landmark (Optional)
+                  </label>
                   <input
                     type="text"
                     name="landmark"
@@ -341,7 +383,7 @@ const Address = () => {
                   type="submit"
                   className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
                 >
-                  {editingAddress ? 'Update Address' : 'Add Address'}
+                  {editingAddress ? "Update Address" : "Add Address"}
                 </button>
               </div>
             </form>
@@ -355,7 +397,9 @@ const Address = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               className={`bg-white rounded-lg shadow-md overflow-hidden ${
-                selectedAddress?._id === address._id ? 'ring-2 ring-primary-500' : ''
+                selectedAddress?._id === address._id
+                  ? "ring-2 ring-primary-500"
+                  : ""
               }`}
             >
               <div className="p-6">
@@ -419,7 +463,9 @@ const Address = () => {
         {addresses.length === 0 && !showForm && (
           <div className="text-center py-12 bg-white rounded-lg shadow">
             <FaMapMarkerAlt className="mx-auto h-12 w-12 text-gray-400" />
-            <h3 className="mt-2 text-sm font-medium text-gray-900">No addresses</h3>
+            <h3 className="mt-2 text-sm font-medium text-gray-900">
+              No addresses
+            </h3>
             <p className="mt-1 text-sm text-gray-500">
               Get started by adding a new delivery address.
             </p>
@@ -439,4 +485,4 @@ const Address = () => {
   );
 };
 
-export default Address; 
+export default Address;

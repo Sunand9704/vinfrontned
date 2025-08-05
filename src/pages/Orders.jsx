@@ -449,6 +449,11 @@ const Orders = () => {
                             <p className="mt-1 text-xs md:text-sm lg:text-base text-gray-400">
                               Quantity: {item.quantity} × ₹{item.price}
                             </p>
+                            {item.category && (
+                              <p className="mt-1 text-xs md:text-sm text-gray-500">
+                                Category: {item.category}
+                              </p>
+                            )}
                             {item.product?.length &&
                               item.product?.width &&
                               item.product?.height && (
