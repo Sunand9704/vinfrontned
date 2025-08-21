@@ -142,16 +142,11 @@ const ImageModal = ({
               <div className="mb-3">
                 <div className="flex items-baseline gap-1">
                   <span className="text-xl font-bold text-white">
-                    ₹{product?.price}
+                    ₹
+                    {product?.discount && product?.discount > 0
+                      ? Math.round(product?.price * (1 - product?.discount / 100))
+                      : product?.price}
                   </span>
-                  {product?.discount > 0 && (
-                    <span className="text-sm text-gray-400 line-through">
-                      ₹
-                      {Math.round(
-                        product?.price * (1 + product?.discount / 100)
-                      )}
-                    </span>
-                  )}
                 </div>
               </div>
 
@@ -260,9 +255,23 @@ const Products = () => {
     .sort((a, b) => {
       switch (sortBy) {
         case "price-low":
-          return a.price - b.price;
+          return (
+            (a.discount && a.discount > 0
+              ? Math.round(a.price * (1 - a.discount / 100))
+              : a.price) -
+            (b.discount && b.discount > 0
+              ? Math.round(b.price * (1 - b.discount / 100))
+              : b.price)
+          );
         case "price-high":
-          return b.price - a.price;
+          return (
+            (b.discount && b.discount > 0
+              ? Math.round(b.price * (1 - b.discount / 100))
+              : b.price) -
+            (a.discount && a.discount > 0
+              ? Math.round(a.price * (1 - a.discount / 100))
+              : a.price)
+          );
         case "rating":
           return b.rating - a.rating;
         case "newest":
@@ -596,17 +605,13 @@ const Products = () => {
                             <div className="mt-2">
                               <div className="flex items-baseline gap-1">
                                 <span className="text-sm font-bold text-white">
-                                  ₹{product.price}
+                                  ₹
+                                  {product.discount && product.discount > 0
+                                    ? Math.round(
+                                        product.price * (1 - product.discount / 100)
+                                      )
+                                    : product.price}
                                 </span>
-                                {product.discount > 0 && (
-                                  <span className="text-xs text-gray-400 line-through">
-                                    ₹
-                                    {Math.round(
-                                      product.price *
-                                        (1 + product.discount / 100)
-                                    )}
-                                  </span>
-                                )}
                               </div>
                             </div>
 
