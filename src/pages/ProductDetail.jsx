@@ -349,7 +349,12 @@ const ProductDetail = () => {
                 <div className="text-right">
                   <div className="flex items-baseline gap-2">
                     <span className="text-3xl font-bold text-primary-600">
-                      ₹{product.price}
+                      ₹
+                      {product.discount && product.discount > 0
+                        ? Math.round(
+                            product.price * (1 - product.discount / 100)
+                          )
+                        : product.price}
                     </span>
                     <span className="text-sm text-gray-500">
                       {product.length && product.width && product.height ? (
@@ -366,39 +371,7 @@ const ProductDetail = () => {
                       )}
                     </span>
                   </div>
-                  <div className="mt-1">
-                    {product.discount > 0 ? (
-                      <>
-                        <span className="text-sm text-gray-500 line-through">
-                          ₹
-                          {Math.round(
-                            product.price * (1 + product.discount / 100)
-                          )}
-                        </span>
-                        <span className="ml-2 text-sm text-green-600">
-                          Save ₹
-                          {Math.round(product.price * (product.discount / 100))}
-                        </span>
-                      </>
-                    ) : product.originalPrice &&
-                      product.originalPrice !== product.price ? (
-                      <>
-                        <span className="text-sm text-gray-500 line-through">
-                          ₹{product.originalPrice}
-                        </span>
-                        <span className="ml-2 text-sm text-green-600">
-                          Save ₹{product.originalPrice - product.price}
-                        </span>
-                      </>
-                    ) : (
-                      <span className="text-sm text-gray-500">
-                        {product.originalPrice &&
-                        product.originalPrice !== product.price
-                          ? `Original Price: ₹${product.originalPrice}`
-                          : "Regular Price"}
-                      </span>
-                    )}
-                  </div>
+                  {/* Removed original price and save info to display only final price */}
                 </div>
               </div>
 
